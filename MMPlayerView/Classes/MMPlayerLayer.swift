@@ -299,7 +299,7 @@ public class MMPlayerLayer: AVPlayerLayer {
     fileprivate func addPlayerObserver() {
         NotificationCenter.default.removeObserver(self)
         if timeObserver == nil {
-            timeObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 100), queue: DispatchQueue.main, using: { [weak self] (time) in
+            timeObserver = self.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(value: 1, timescale: 100), queue: DispatchQueue.main, using: { [weak self] (time) in
                 
                 if time.isIndefinite {
                     return
@@ -310,7 +310,7 @@ public class MMPlayerLayer: AVPlayerLayer {
             })
         }
         
-        NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil, using: { [weak self] (nitification) in
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: { [weak self] (nitification) in
             switch self?.currentPlayStatus ?? .unknown {
             case .pause:
                 self?.isBackgroundPause = true
@@ -320,7 +320,7 @@ public class MMPlayerLayer: AVPlayerLayer {
             self?.player?.pause()
         })
         
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidBecomeActive, object: nil, queue: nil, using: { [weak self] (nitification) in
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: nil, queue: nil, using: { [weak self] (nitification) in
             if self?.isBackgroundPause == false {
                 self?.player?.play()
             }
